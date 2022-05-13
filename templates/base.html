@@ -36,11 +36,11 @@
         <nav class="row m-0 bg-nav">
             <div class="d-none d-sm-block col-md-2"></div>
             <div class="p-2 col-8 col-md-8 text-center h1">
-                <a class="text-info" href="{% url 'home' %}">Workforce</a>
+                <a class="text-info" href="{% url 'home' %}">WhatsAPP</a>
             </div>            
             {% if request.user.is_superuser%}
                 <a class="p-0 col-2 col-md-1 text-center my-auto text-light nav-text dropdown" href="#">Menu <i class="fas fa-caret-down"></i></a>
-                <a href="{% url 'logout' %}" class="p-0 col-2 col-md-1 text-center my-auto text-light logout-button nav-text">Logout</a>
+                <a href="#" class="p-0 col-2 col-md-1 text-center my-auto text-light logout-button nav-text">Logout</a>
             {% else %}
                 <a href="#" class="p-0 col-4 col-md-2 text-end my-auto text-light login-button nav-text p-3">Login</a>
             {% endif %}
@@ -70,33 +70,7 @@
         </div>   
 
         <footer class="footer bg-nav text-danger text-center h6 m-0">            
-            <div class="p-1 text-info">Workforce 2021</div>
-            <div class="p-1 text-info">Contact: zahurmeerun@hotmail.com</div>
+            <div class="p-1 text-info">Django WhatsAPP</div>
         </footer> 
-
-        <!-- login Modal -->    
-        <div id="loginModal" class="modal login-modal">
-            <div class="modal-content mt-0 border-info bg-modal">                                     
-                <div class="choose mb-2">
-                    <h5 class="text-center text-info modal-title">Enter username and password</h5> 
-                    <h6 class="error-message text-danger text-center"></h6>                             
-                </div>
-                <div class="w-75 mx-auto mb-2 mb-sm-3">
-                    <form action="{% url 'login' %}" method="POST" id="login-form">
-                        {% csrf_token %}                        
-                        <div class="input-group input-group-sm mb-3">
-                            <span class="input-group-text" id="basic-addon1">@</span>
-                            <input type="text" class="form-control" placeholder="Username" name="username" aria-label="Username" aria-describedby="basic-addon1">
-                        </div>                      
-                        <div class="input-group input-group-sm mb-3">
-                            <span class="input-group-text" id="basic-addon1">@</span>
-                            <input type="password" class="form-control" placeholder="password" name="password" aria-label="Username" aria-describedby="basic-addon1">
-                        </div>                                                   
-                        <button type="submit" class="btn button border-light rounded-1 p-1 p-md-2">Submit</button>
-                        <button type="button" class="btn button close border-light rounded-1 p-1 p-md-2">Close</button>
-                    </form>                                                     
-                </div> 
-            </div>            
-        </div>
     </body>     
 </html>

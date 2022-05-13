@@ -2,12 +2,18 @@ from django.contrib.auth.signals import user_logged_in
 from django.dispatch import receiver
 from django.shortcuts import render
 
+from django.contrib.auth.models import User
+
 
 # Create your views here
 def index(request):
     """A view to return the home page"""
 
-    context = {}
+    users = User.objects.all()
+
+    context = {
+        "users": users,
+    }
 
     return render(request, "home/index.html", context)
 

@@ -35,17 +35,17 @@
     <body>        
         <nav class="row m-0 bg-dark text-light">
             <div class="p-2 col-6 text-start h3">
-                <a class="text-light text-decoration-none" href="{% url 'home' %}">Django WhatsAPP</a>
+                <a class="text-light text-decoration-none logo" href="{% url 'home' %}">Django WhatsAPP</a>
             </div>
-            <div class="p-2 col-6 text-end my-auto">
+            <div class="p-2 col-6 text-end my-auto links">
                 {% if request.user.is_authenticated %}
                     {% if request.user.is_superuser %}
-                        <a class="text-decoration-none text-light p-2" href="#" class="">Admin</a>
+                        <a class="text-decoration-none text-light p-1" href="#" class="">Admin</a>
                     {% endif %}
-                        <a class="text-decoration-none text-light p-2" href="#" class="">Logout</a>
+                        <a class="text-decoration-none text-light p-1" href="{% url 'account_logout' %}" class="">Logout</a>
                 {% else %}
-                    <a class="text-decoration-none text-light p-2" href="#" class="">Login</a>
-                    <a class="text-decoration-none text-light p-2" href="#" class="">Sign-Up</a>
+                    <a class="text-decoration-none text-light p-1" href="{% url 'account_login' %}" class="">Login</a>
+                    <a class="text-decoration-none text-light p-1" href="{% url 'account_signup' %}#" class="">Sign-Up</a>
                 {% endif %}
             </div>         
         </nav>            

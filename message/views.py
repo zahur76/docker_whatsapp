@@ -12,7 +12,7 @@ from urllib3 import Retry
 from .models import UserMessage
 from django.contrib.auth.models import User
 from django.template.defaulttags import register
-
+import json
 
 # filters
 @register.simple_tag
@@ -38,9 +38,9 @@ def send_message(request):
 
     if request.method == "POST":        
 
-        body = request.POST
+        body = json.loads(request.body)
 
-        user_receiver = get_object_or_404(User, username=request.POST['username'])
+        user_receiver = get_object_or_404(User, username=body['username'])
 
         relation_ = pwgenerator.generate()
         # store message
@@ -61,12 +61,11 @@ def send_message(request):
                 message = body['message'],                          
             )
 
-            messages.success(request, "Message Sent!")
-            return redirect(request.META.get('HTTP_REFERER', 'home'))
+            return JsonResponse({'status': 'ok'})
         except  Exception as e:
             print(e)
-            messages.error(request, "Could not send Message!")
-            return redirect(request.META.get('HTTP_REFERER', 'home'))
+            return JsonResponse({'status': 'error'})
+
 
 
 # Create your views here.

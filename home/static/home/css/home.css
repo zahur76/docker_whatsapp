@@ -1,0 +1,15 @@
+.chatbox {   
+    font-family: 'Fredoka', sans-serif;
+}
+    
+.date-text {
+    font-size: 12px;
+}
+
+.chat-bg {
+    background-color: rgb(176, 255, 176);
+}
+
+.chat-content {
+    background-image: linear-gradient(to right, rgb(255, 212, 243), rgb(244, 231, 255));
+}

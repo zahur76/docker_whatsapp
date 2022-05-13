@@ -33,17 +33,21 @@
         <title>Django-Whatsapp</title>
     </head>
     <body>        
-        <nav class="row m-0 bg-nav">
-            <div class="d-none d-sm-block col-md-2"></div>
-            <div class="p-2 col-8 col-md-8 text-center h1">
-                <a class="text-info" href="{% url 'home' %}">WhatsAPP</a>
-            </div>            
-            {% if request.user.is_superuser%}
-                <a class="p-0 col-2 col-md-1 text-center my-auto text-light nav-text dropdown" href="#">Menu <i class="fas fa-caret-down"></i></a>
-                <a href="#" class="p-0 col-2 col-md-1 text-center my-auto text-light logout-button nav-text">Logout</a>
-            {% else %}
-                <a href="#" class="p-0 col-4 col-md-2 text-end my-auto text-light login-button nav-text p-3">Login</a>
-            {% endif %}
+        <nav class="row m-0 bg-dark text-light">
+            <div class="p-2 col-6 text-start h3">
+                <a class="text-light text-decoration-none" href="{% url 'home' %}">Django WhatsAPP</a>
+            </div>
+            <div class="p-2 col-6 text-end my-auto">
+                {% if request.user.is_authenticated %}
+                    {% if request.user.is_superuser %}
+                        <a class="text-decoration-none text-light p-2" href="#" class="">Admin</a>
+                    {% endif %}
+                        <a class="text-decoration-none text-light p-2" href="#" class="">Logout</a>
+                {% else %}
+                    <a class="text-decoration-none text-light p-2" href="#" class="">Login</a>
+                    <a class="text-decoration-none text-light p-2" href="#" class="">Sign-Up</a>
+                {% endif %}
+            </div>         
         </nav>            
         <!-- flash-messages -->
         {% if messages %}
@@ -69,8 +73,8 @@
             {% endblock %}
         </div>   
 
-        <footer class="footer bg-nav text-danger text-center h6 m-0">            
-            <div class="p-1 text-info">Django WhatsAPP</div>
+        <footer class="footer bg-dark text-light text-center h6 m-0">            
+            <div class="p-1">Django WhatsAPP</div>
         </footer> 
     </body>     
 </html>

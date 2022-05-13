@@ -7,8 +7,13 @@
 
 {% block content %}
     <div class="h1 text-center">
+        <input type="hidden" id="csrfmiddlewaretoken" value="{{ csrf_token }}" />
         <div class="row m-0 my-auto">
-            <div class="col-12 h5 mt-1"><i class="fas fa-user"></i> {{ request.user|capfirst }}</div>
+            {% if request.user.is_authenticated %}
+            <div class="col-12 h5 mt-1"><i class="fas fa-user"></i>                
+                {{ request.user|capfirst }}                
+            </div>
+            {% endif %}
             <div class="col-12 border-bottom fst-italic h4 text-start">ChatBoxers</div>
             {% if request.user.is_authenticated %}
             {% for user in users %}
@@ -20,8 +25,19 @@
                             <i class="fas fa-circle text-secondary h6"></i>
                         {% endif %}
                         {{ user }}
-                        <i class="fas fa-comment text-primary btn" data-bs-toggle="modal" data-bs-target="#chatBox-{{ forloop.counter }}"></i>
-                        {% unread_messages request.user user %}
+                        {% unread_messages request.user user as counter %}
+                        <i class="fas fa-comment text-primary btn pe-1 ps-1 chatbox-open" data-bs-toggle="modal" data-bs-target="#chatBox-{{ forloop.counter }}" value="{{ user }}"></i>                        
+                        {% if counter == 0 %}
+                        {% else %}
+                            <i class="fas fa-envelope h6" id="chatBox-{{ forloop.counter }}-envelope"></i>
+                            <span class="count h6" id="chatBox-{{ forloop.counter }}-unread"> {{ counter }} unread
+                                {% if counter == 1 %}
+                                    message
+                                {% else %}
+                                    messages
+                                {% endif %}
+                            </span>     
+                        {% endif %}                                           
                     </div>
                 {% endif %}
                 <!-- chat box -->

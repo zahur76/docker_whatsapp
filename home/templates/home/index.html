@@ -21,6 +21,7 @@
                         {% endif %}
                         {{ user }}
                         <i class="fas fa-comment text-primary btn" data-bs-toggle="modal" data-bs-target="#chatBox-{{ forloop.counter }}"></i>
+                        {% unread_messages request.user user %}
                     </div>
                 {% endif %}
                 <!-- chat box -->
@@ -29,14 +30,23 @@
                     <div class="modal-dialog">
                     <div class="modal-content">
                         <div class="modal-header">
-                        <h5 class="modal-title" id="exampleModalLabel"><i class="fas fa-comment-dots"></i> {{ user|capfirst }} </h5>
-                        <button type="button" class="btn-close btm-sm h6" data-bs-dismiss="modal" aria-label="Close"></button>
+                            <h5 class="modal-title" id="exampleModalLabel"><i class="fas fa-comment-dots"></i> {{ user|capfirst }} </h5>
+                            <button type="button" class="btn-close btm-sm h6" data-bs-dismiss="modal" aria-label="Close"></button>
                         </div>
+                        {% for message in request.user.message.all %}
+                            {% if message.user_two == user %}
+                                {{ message.message }}
+                            {% endif %}
+                        {% endfor %}
                         <div class="modal-body">
-                        ...
-                        </div>
-                        <div class="modal-footer">
-                        <button type="button" class="btn btn-dark btn-sm">Send <i class="fas fa-share"></i></button>
+                            <form action="{% url 'send_message' %}" method="POST">
+                                {% csrf_token %}
+                                <input type="hidden" class="username" name="username" value="{{ user.username }}" />
+                                <div class="input-group message">
+                                    <textarea class="form-control" aria-label="With textarea" name="message" required></textarea>
+                                </div>                                    
+                                <button type="submit" class="btn btn-dark mt-2 btn-sm">Send <i class="fas fa-share"></i></button>                                
+                            </form>  
                         </div>
                     </div>
                     </div>

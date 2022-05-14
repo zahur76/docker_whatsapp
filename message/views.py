@@ -1,3 +1,4 @@
+import re
 from django.dispatch import receiver
 from django.shortcuts import render, get_object_or_404, redirect, reverse
 from django.http import JsonResponse
@@ -11,7 +12,9 @@ from urllib3 import Retry
 
 from .models import UserMessage
 from django.contrib.auth.models import User
+from .serializers import MessageSerializer
 from django.template.defaulttags import register
+from rest_framework import generics
 import json
 
 # filters
@@ -28,6 +31,23 @@ def unread_messages(user, username):
             count += 1
 
     return count
+
+
+class UserMessages(generics.RetrieveAPIView):
+    queryset = UserMessage.objects.all()
+    serializer_class = MessageSerializer
+    lookup_fields = ('user')
+    
+    def get_object(self):
+        queryset = self.get_queryset()
+
+        print(queryset)
+        filter = {}
+
+        obj = get_object_or_404(queryset, **filter)
+        self.check_object_permissions(self.request, obj)
+        return 
+    
 
 # Create your views here.
 @login_required

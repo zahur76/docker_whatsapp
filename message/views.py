@@ -1,6 +1,8 @@
+import errno
 from pydoc import allmethods
 import re
 from sre_constants import GROUPREF_EXISTS
+from urllib import response
 from django.dispatch import receiver
 from django.shortcuts import render, get_object_or_404, redirect, reverse
 from django.http import JsonResponse
@@ -124,10 +126,9 @@ def messages_read(request, username):
     return JsonResponse({'status': 'ok'})
 
 
-# Create your views here.
 @require_http_methods(["DELETE"])
 @login_required
-def clear_message(request,message_id, username):
+def clear_message(request, message_id, username):
     """ View to clear message from one side only """
 
     try:
@@ -136,9 +137,37 @@ def clear_message(request,message_id, username):
         message = None
     
     if not message:
-        return JsonResponse({'status': 'no messages from sender'})
+        return JsonResponse(status=404)
     
     message.delete()
+
+    user_two = get_object_or_404(User, id=username)
+
+    print(user_two)
+
+    all_messages = UserMessage.objects.filter(user=request.user, user_two=user_two)
+    serializer = MessageSerializer(all_messages, many=True)
+            
+    return JsonResponse({'data': serializer.data})
+
+
+@require_http_methods(["DELETE"])
+@login_required
+def delete_message(request, message_id, username):
+    """ View to delete message from one from sender and receiver """
+
+    try:
+        message = get_object_or_404(UserMessage, user=request.user, id=message_id)
+    except:
+        message = None
+    
+    if not message:
+        return JsonResponse(status=404)    
+    
+    messages = UserMessage.objects.filter(relation=message.relation)
+    for message_ in messages:
+        message_.message = "Message Deleted"
+        message_.save()
 
     user_two = get_object_or_404(User, id=username)
 

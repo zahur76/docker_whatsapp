@@ -9,4 +9,5 @@ urlpatterns = [
     path("messages_read/<slug:username>", views.messages_read, name="messages_read"),
     path("userMessages/<slug:username>", UserMessages.as_view(), name="UserMessages"),
     path("clear_message/<int:message_id>/<slug:username>", views.clear_message, name="clear_message"),
+    path("delete_message/<int:message_id>/<slug:username>", views.delete_message, name="delete_message"),
 ]

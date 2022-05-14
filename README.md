@@ -8,7 +8,7 @@ Works similar to whatsapp with seen and unseen status.
 
 ![sign-in](media/whatsapp2.png)
 
-Live [site](http://mo-lacuizine.herokuapp.com/)
+Live [site](https://whatsapp.hansolo.digital/)
 
 ## INSTALLATION
 

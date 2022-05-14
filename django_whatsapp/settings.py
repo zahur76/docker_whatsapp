@@ -175,8 +175,10 @@ STATICFILES_DIRS = (os.path.join(BASE_DIR, "static"),)
 
 STATIC_ROOT = os.path.join(BASE_DIR, "staticfiles")
 
-# This will add the file to the media folder and not to another url
+# where media files are served https://127.0.0.1/media/{file}
 MEDIA_URL = "/media/"
+
+# media save location
 MEDIA_ROOT = os.path.join(BASE_DIR, "media")
 
 # Default primary key field type

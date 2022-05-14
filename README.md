@@ -26,7 +26,8 @@ Live [site](http://mo-lacuizine.herokuapp.com/)
 * css 
 * javacript (ES6)
 * python (v3.8.6)
-* Django framework to send message request for auto updat
+* Django
+* Django restframework to send messages to frontend via fetch request
 * SQL database
 * Jquery
 * Chrome developers tools for analysing scripts and debugging
@@ -40,5 +41,5 @@ Live [site](http://mo-lacuizine.herokuapp.com/)
 
 Clear will erase message from logged-in user side only.
 
-Delete will modify message to "Message Deleted" for both sender and receiver.
+Delete will modify message to "Message Deleted" for both sender and receiver. This can only be done by the message creator
 

@@ -4,7 +4,7 @@ A Web based App which allows messaging for signed in users.
 
 Works similar to whatsapp with seen and unseen status with real time message update.
 
-Can also upload change profile photo by clicking on image.
+Can also upload and change profile photo by clicking on image.
 
 ![sign-in](media/Untitled.png)
 

@@ -9,6 +9,7 @@ class UserMessageAdmin(admin.ModelAdmin):
         "message",
         "user_two",
         "sender",
+        "message_read",
     )    
 
 admin.site.register(UserMessage, UserMessageAdmin)

@@ -1,5 +1,6 @@
 from pydoc import allmethods
 import re
+from sre_constants import GROUPREF_EXISTS
 from django.dispatch import receiver
 from django.shortcuts import render, get_object_or_404, redirect, reverse
 from django.http import JsonResponse
@@ -93,7 +94,7 @@ def send_message(request):
 @require_http_methods(["UPDATE"])
 @login_required
 def messages_read(request, username):
-    """ View to mark all messages as read for sender """
+    """ View to mark all messages as read for sender and receiver """
 
     try:
         messages = UserMessage.objects.filter(user=request.user, sender=username)
@@ -104,6 +105,20 @@ def messages_read(request, username):
         return JsonResponse({'status': 'no messages from sender'})  
     
     for message in messages:
+        message.message_read = True
+        message.save()
+    
+    # Also mark as read for sender
+    user = get_object_or_404(User, username=username)
+    try:
+        messages_ = UserMessage.objects.filter(user=user, sender=username)
+    except:
+        messages_ = None
+    
+    if not messages_:
+        return JsonResponse({'status': 'no messages from sender'})  
+    
+    for message in messages_:
         message.message_read = True
         message.save()
     

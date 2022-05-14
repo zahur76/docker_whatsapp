@@ -31,9 +31,16 @@ $(document).ready(function(){
                             hour: "2-digit",
                             minute: "2-digit"};
               d = d.toLocaleDateString("en-US", options)
+              let seen = 'Seen'
+              console.log(message.message_read)
+              if(message.message_read){
+                seen = 'Seen'
+              }else{
+                seen = "Unseen"
+              }
               if(message.sender!=username){                
                 $( ".chatbox" ).append(`<div class="col-10 card pull-2 text-start h5 p-2 fst-italic chat-bg">
-                ${message.message}<div class="date-text">${d}</div></div>`);
+                ${message.message}<div class="date-text">${d}</div><div class="col-12 text-end date-text">${seen}</div></div>`);
               }else{
                 $( ".chatbox" ).append(`<div class="col-10 card offset-2 text-start h5 p-2 fst-italic chat-bg">
                 ${message.message}<div class="date-text">${d}</div></div>`);

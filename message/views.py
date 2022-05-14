@@ -1,3 +1,4 @@
+from pydoc import allmethods
 import re
 from django.dispatch import receiver
 from django.shortcuts import render, get_object_or_404, redirect, reverse
@@ -17,6 +18,8 @@ from django.template.defaulttags import register
 from rest_framework import generics
 import json
 
+from message import serializers
+
 # filters
 @register.simple_tag
 def unread_messages(user, username):
@@ -35,8 +38,15 @@ def unread_messages(user, username):
 
 class UserMessages(generics.ListAPIView):
     # permission_classes = (IsAuthenticated,)
-    queryset = UserMessage.objects.all()
     serializer_class = MessageSerializer
+
+    def get_queryset(self):
+        """
+        Return all messages for for the currently authenticated user and contact.
+        """
+        user = self.request.user
+        user_two = get_object_or_404(User, username=self.kwargs['username'])
+        return UserMessage.objects.filter(user=user, user_two=user_two)
     
 
 # Create your views here.
@@ -71,11 +81,12 @@ def send_message(request):
                 message = body['message'],                          
             )
 
-            return JsonResponse({'status': 'ok'})
+            all_messages = UserMessage.objects.filter(user=request.user, user_two=user_receiver)
+            serializer = MessageSerializer(all_messages, many=True)
+            
+            return JsonResponse({'data': serializer.data})
         except  Exception as e:
-            print(e)
-            return JsonResponse({'status': 'error'})
-
+            return JsonResponse({'status': e})
 
 
 # Create your views here.
@@ -90,11 +101,7 @@ def messages_read(request, username):
         messages = None
     
     if not messages:
-        messages.error(
-            request,
-            "Permission Denied!",
-        )
-        return redirect(reverse("home"))    
+        return JsonResponse({'status': 'no messages from sender'})  
     
     for message in messages:
         message.message_read = True

@@ -2,30 +2,46 @@ $(document).ready(function(){
 
     // JS for chatbox
     
-    // Remove unread messages when chat box openned
+    // Remove unread messages when chat box openned and load messages
     $('.chatbox-open').click(function(){
         let csrfToken = $('#csrfmiddlewaretoken').attr('value');
         let username = $(this).attr('value')
         let counter = $(this).attr('data-bs-target') + '-unread'
         let envelope = $(this).attr('data-bs-target') + '-envelope'
-        let loggedInUSer = $('#logged-in-user').attr('value');
-        console.log(loggedInUSer)
 
-        fetch(`/message/userMessages/${loggedInUSer }`)
+        // clear chat box and make new request
+        $( ".chatbox" ).html('');
+
+        // request all messages from authenticated user and contact
+        fetch(`/message/userMessages/${username}`)
         .then((response) => {
-            if (response.ok) {          
+            if (response.ok) {        
                 return response.json();
             }
             throw new Error('Something went wrong');
           })
           .then((responseJson) => {
-            console.log(responseJson) 
+            responseJson.forEach(function(message) {
+              // covert date format
+              var d = new Date(message.created_at);
+              var options = { year: 'numeric', month: 'long', day: 'numeric', hour12: true,
+                            hour: "2-digit",
+                            minute: "2-digit"};
+              d = d.toLocaleDateString("en-US", options)
+              if(message.sender!=username){                
+                $( ".chatbox" ).append(`<div class="col-10 card pull-2 text-start h5 p-2 fst-italic chat-bg">
+                ${message.message}<div class="date-text">${d}</div></div>`);
+              }else{
+                $( ".chatbox" ).append(`<div class="col-10 card offset-2 text-start h5 p-2 fst-italic chat-bg">
+                ${message.message}<div class="date-text">${d}</div></div>`);
+              }              
+            }); 
           })
           .catch((error) => {
                 console.log(error)
-        });
+        });       
         
-        
+        // mark messages as read
         fetch(`/message/messages_read/${username}`, { method: 'UPDATE', headers: {'X-CSRFToken': csrfToken} })
         .then((response) => {
             if (response.ok) {          
@@ -34,8 +50,10 @@ $(document).ready(function(){
             throw new Error('Something went wrong');
           })
           .then((responseJson) => {
-            $(`${counter}`).hide();
-            $(`${envelope}`).hide();  
+            if(responseJson.status!='no messages from sender'){
+              $(`${counter}`).hide();
+              $(`${envelope}`).hide(); 
+            }   
           })
           .catch((error) => {
                 console.log(error)
@@ -63,7 +81,25 @@ $(document).ready(function(){
             throw new Error('Something went wrong');
           })
           .then((responseJson) => {
+            // clear chat box and make new request
+            $( ".chatbox" ).html('');
+            // reload all messages to update
             console.log(responseJson)
+            responseJson.data.forEach(function(message) {
+              // covert date format
+              var d = new Date(message.created_at);
+              var options = { year: 'numeric', month: 'long', day: 'numeric', hour12: true,
+                            hour: "2-digit",
+                            minute: "2-digit"};
+              d = d.toLocaleDateString("en-US", options)
+              if(message.sender!=username){                
+                $( ".chatbox" ).append(`<div class="col-10 card pull-2 text-start h5 p-2 fst-italic chat-bg">
+                ${message.message}<div class="date-text">${d}</div></div>`);
+              }else{
+                $( ".chatbox" ).append(`<div class="col-10 card offset-2 text-start h5 p-2 fst-italic chat-bg">
+                ${message.message}<div class="date-text">${d}</div></div>`);
+              }              
+            });
           })
           .catch((error) => {
                 console.log(error)

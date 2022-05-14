@@ -14,8 +14,10 @@
             <div class="col-12 h5 mt-1"><i class="text-success fas fa-user"></i>                
                 {{ request.user|capfirst }}                
             </div>
-            {% endif %}
             <div class="col-12 border-bottom fst-italic h4 text-start">ChatBoxers</div>
+            {% else %}
+            <div class="col-12 fst-italic h4 text-center p-3">Please Login</div>
+            {% endif %}           
             {% if request.user.is_authenticated %}
             {% for user in users %}
                 {% if user != request.user %}

@@ -52,6 +52,7 @@ INSTALLED_APPS = [
 
     'home',
     'message',
+    'profile',
 ]
 
 MIDDLEWARE = [

@@ -11,5 +11,5 @@
 }
 
 .chat-content {
-    background-image: linear-gradient(to right, rgb(212, 218, 255), rgb(239, 242, 253));
+    background-image: url('/media/whatsapp.png');
 }

@@ -51,7 +51,7 @@
                         </div>
                         <div class="row m-0 p-2 chatbox">                                                       
                         </div>
-                        <div class="modal-body">
+                        <div class="modal-body" id="modal-focus">
                             <form class="submit-message" action="#" method="POST">
                                 {% csrf_token %}
                                 <input type="hidden" id="username" class="username" name="username" value="{{ user.username }}" />

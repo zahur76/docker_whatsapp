@@ -3,7 +3,10 @@ $(document).ready(function(){
     // JS for chatbox
     
     // Remove unread messages when chat box openned and load messages
-    $('.chatbox-open').click(function(){
+      $('.chatbox-open').click(function(){
+
+        $(".modal").animate({scrollTop: $('#modal-focus').offset().top + 9999}, 200);
+      
         let csrfToken = $('#csrfmiddlewaretoken').attr('value');
         let username = $(this).attr('value')
         let counter = $(this).attr('data-bs-target') + '-unread'

@@ -39,11 +39,11 @@ $(document).ready(function(){
               }
               if(message.sender!=username){                
                 $( ".chatbox" ).append(`<div class="col-10 card pull-2 text-start h5 p-2 fst-italic chat-bg">
-                ${message.message}<div class="date-text">${d}</div><div class="col-12 text-end h6">${seen} <div class="d-inline text-danger btn btn-sm p-0">Clear</div><div class="d-inline text-danger btn btn-sm p-0"> <i class="fas fa-trash"></i></div></div></div>`);
+                ${message.message}<div class="date-text">${d}</div><div class="col-12 text-end h6">${seen} <div class="d-inline text-danger btn btn-sm p-0 clear-message" value=${message.id} data=${message.user_two}>Clear</div><div class="d-inline text-danger btn btn-sm p-0"> <i class="fas fa-trash"></i></div></div></div>`);
               }else{
                 $( ".chatbox" ).append(`<div class="col-10 card offset-2 text-start h5 p-2 fst-italic chat-bg">
-                ${message.message}<div class="date-text">${d}</div><div class="col-12 text-end date-text"><div class="d-inline text-danger">Clear</div></div></div>`);
-              }              
+                ${message.message}<div class="date-text">${d}</div><div class="col-12 text-end date-text"><div class="d-inline text-danger text-danger btn btn-sm p-0 clear-message" value=${message.id} data=${message.user_two}>Clear</div></div></div>`);
+              }             
             }); 
           })
           .catch((error) => {
@@ -109,16 +109,60 @@ $(document).ready(function(){
               }
               if(message.sender!=username){                
                 $( ".chatbox" ).append(`<div class="col-10 card pull-2 text-start h5 p-2 fst-italic chat-bg">
-                ${message.message}<div class="date-text">${d}</div><div class="col-12 text-end h6">${seen} <div class="d-inline text-danger btn btn-sm p-0">Clear</div><div class="d-inline text-danger btn btn-sm p-0"> <i class="fas fa-trash"></i></div></div></div>`);
+                ${message.message}<div class="date-text">${d}</div><div class="col-12 text-end h6">${seen} <div class="d-inline text-danger btn btn-sm p-0 clear-message" value=${message.id} data=${message.user_two}>Clear</div><div class="d-inline text-danger btn btn-sm p-0"> <i class="fas fa-trash"></i></div></div></div>`);
               }else{
                 $( ".chatbox" ).append(`<div class="col-10 card offset-2 text-start h5 p-2 fst-italic chat-bg">
-                ${message.message}<div class="date-text">${d}</div><div class="col-12 text-end date-text"><div class="d-inline text-danger">Clear</div></div></div>`);
+                ${message.message}<div class="date-text">${d}</div><div class="col-12 text-end date-text"><div class="d-inline text-danger text-danger btn btn-sm p-0 clear-message" value=${message.id} data=${message.user_two}>Clear</div></div></div>`);
               }            
             });
           })
           .catch((error) => {
                 console.log(error)
           });
+    });
 
+    // clear messages from dialog box
+    $(document).on('click', '.clear-message', function(){
+      let messageId = $(this).attr('value')
+      let username = $(this).attr('data')
+      let csrfToken = $('#csrfmiddlewaretoken').attr('value');
+      fetch(`/message/clear_message/${messageId}/${username}`, { method: 'DELETE', headers: {'X-CSRFToken': csrfToken} })
+        .then((response) => {
+            if (response.ok) {          
+                return response.json();
+            }
+            throw new Error('Something went wrong');
+          })
+          .then((responseJson) => {
+            
+              // clear chat box and make new request
+              $( ".chatbox" ).html('');
+              // reload all messages to update
+              responseJson.data.forEach(function(message) {
+                // covert date format
+                $('textarea').val('');
+                var d = new Date(message.created_at);
+                var options = { year: 'numeric', month: 'long', day: 'numeric', hour12: true,
+                              hour: "2-digit",
+                              minute: "2-digit"};
+                d = d.toLocaleDateString("en-US", options)
+                let seen = 'Seen'
+                if(message.message_read){
+                  seen = 'Seen'
+                }else{
+                  seen = "Unseen"
+                }
+                if(message.sender!=username){                
+                  $( ".chatbox" ).append(`<div class="col-10 card pull-2 text-start h5 p-2 fst-italic chat-bg">
+                  ${message.message}<div class="date-text">${d}</div><div class="col-12 text-end h6">${seen} <div class="d-inline text-danger btn btn-sm p-0 clear-message" value=${message.id} data=${message.user_two}>Clear</div><div class="d-inline text-danger btn btn-sm p-0"> <i class="fas fa-trash"></i></div></div></div>`);
+                }else{
+                  $( ".chatbox" ).append(`<div class="col-10 card offset-2 text-start h5 p-2 fst-italic chat-bg">
+                  ${message.message}<div class="date-text">${d}</div><div class="col-12 text-end date-text"><div class="d-inline text-danger text-danger btn btn-sm p-0 clear-message" value=${message.id} data=${message.user_two}>Clear</div></div></div>`);
+                }            
+              });              
+          })
+          .catch((error) => {
+                console.log(error)
+          });
     });
 });

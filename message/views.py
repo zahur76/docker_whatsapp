@@ -90,7 +90,6 @@ def send_message(request):
             return JsonResponse({'status': e})
 
 
-# Create your views here.
 @require_http_methods(["UPDATE"])
 @login_required
 def messages_read(request, username):
@@ -123,6 +122,33 @@ def messages_read(request, username):
         message.save()
     
     return JsonResponse({'status': 'ok'})
+
+
+# Create your views here.
+@require_http_methods(["DELETE"])
+@login_required
+def clear_message(request,message_id, username):
+    """ View to clear message from one side only """
+
+    try:
+        message = UserMessage.objects.filter(user=request.user, id=message_id)
+    except:
+        message = None
+    
+    if not message:
+        return JsonResponse({'status': 'no messages from sender'})
+    
+    message.delete()
+
+    user_two = get_object_or_404(User, id=username)
+
+    all_messages = UserMessage.objects.filter(user=request.user, user_two=user_two)
+    serializer = MessageSerializer(all_messages, many=True)
+            
+    return JsonResponse({'data': serializer.data})
+    
+   
+
 
 
 

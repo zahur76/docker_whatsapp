@@ -32,7 +32,6 @@ $(document).ready(function(){
                             minute: "2-digit"};
               d = d.toLocaleDateString("en-US", options)
               let seen = 'Seen'
-              console.log(message.message_read)
               if(message.message_read){
                 seen = 'Seen'
               }else{
@@ -40,10 +39,10 @@ $(document).ready(function(){
               }
               if(message.sender!=username){                
                 $( ".chatbox" ).append(`<div class="col-10 card pull-2 text-start h5 p-2 fst-italic chat-bg">
-                ${message.message}<div class="date-text">${d}</div><div class="col-12 text-end date-text">${seen}</div></div>`);
+                ${message.message}<div class="date-text">${d}</div><div class="col-12 text-end h6">${seen} <div class="d-inline text-danger btn btn-sm p-0">Clear</div><div class="d-inline text-danger btn btn-sm p-0"> <i class="fas fa-trash"></i></div></div></div>`);
               }else{
                 $( ".chatbox" ).append(`<div class="col-10 card offset-2 text-start h5 p-2 fst-italic chat-bg">
-                ${message.message}<div class="date-text">${d}</div></div>`);
+                ${message.message}<div class="date-text">${d}</div><div class="col-12 text-end date-text"><div class="d-inline text-danger">Clear</div></div></div>`);
               }              
             }); 
           })
@@ -94,21 +93,27 @@ $(document).ready(function(){
             // clear chat box and make new request
             $( ".chatbox" ).html('');
             // reload all messages to update
-            console.log(responseJson)
             responseJson.data.forEach(function(message) {
               // covert date format
+              $('textarea').val('');
               var d = new Date(message.created_at);
               var options = { year: 'numeric', month: 'long', day: 'numeric', hour12: true,
                             hour: "2-digit",
                             minute: "2-digit"};
               d = d.toLocaleDateString("en-US", options)
+              let seen = 'Seen'
+              if(message.message_read){
+                seen = 'Seen'
+              }else{
+                seen = "Unseen"
+              }
               if(message.sender!=username){                
                 $( ".chatbox" ).append(`<div class="col-10 card pull-2 text-start h5 p-2 fst-italic chat-bg">
-                ${message.message}<div class="date-text">${d}</div></div>`);
+                ${message.message}<div class="date-text">${d}</div><div class="col-12 text-end h6">${seen} <div class="d-inline text-danger btn btn-sm p-0">Clear</div><div class="d-inline text-danger btn btn-sm p-0"> <i class="fas fa-trash"></i></div></div></div>`);
               }else{
                 $( ".chatbox" ).append(`<div class="col-10 card offset-2 text-start h5 p-2 fst-italic chat-bg">
-                ${message.message}<div class="date-text">${d}</div></div>`);
-              }              
+                ${message.message}<div class="date-text">${d}</div><div class="col-12 text-end date-text"><div class="d-inline text-danger">Clear</div></div></div>`);
+              }            
             });
           })
           .catch((error) => {

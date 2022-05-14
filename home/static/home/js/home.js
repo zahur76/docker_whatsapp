@@ -7,7 +7,24 @@ $(document).ready(function(){
         let csrfToken = $('#csrfmiddlewaretoken').attr('value');
         let username = $(this).attr('value')
         let counter = $(this).attr('data-bs-target') + '-unread'
-        let envelope = $(this).attr('data-bs-target') + '-envelope'        
+        let envelope = $(this).attr('data-bs-target') + '-envelope'
+        let loggedInUSer = $('#logged-in-user').attr('value');
+        console.log(loggedInUSer)
+
+        fetch(`/message/userMessages/${loggedInUSer }`)
+        .then((response) => {
+            if (response.ok) {          
+                return response.json();
+            }
+            throw new Error('Something went wrong');
+          })
+          .then((responseJson) => {
+            console.log(responseJson) 
+          })
+          .catch((error) => {
+                console.log(error)
+        });
+        
         
         fetch(`/message/messages_read/${username}`, { method: 'UPDATE', headers: {'X-CSRFToken': csrfToken} })
         .then((response) => {

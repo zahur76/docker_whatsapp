@@ -33,20 +33,10 @@ def unread_messages(user, username):
     return count
 
 
-class UserMessages(generics.RetrieveAPIView):
+class UserMessages(generics.ListAPIView):
+    # permission_classes = (IsAuthenticated,)
     queryset = UserMessage.objects.all()
     serializer_class = MessageSerializer
-    lookup_fields = ('user')
-    
-    def get_object(self):
-        queryset = self.get_queryset()
-
-        print(queryset)
-        filter = {}
-
-        obj = get_object_or_404(queryset, **filter)
-        self.check_object_permissions(self.request, obj)
-        return 
     
 
 # Create your views here.

@@ -11,8 +11,35 @@
         <input type="hidden" id="logged-in-user" value="{{ request.user }}" />
         <div class="row m-0 my-auto">
             {% if request.user.is_authenticated %}
-            <div class="col-12 h5 mt-1"><i class="text-success fas fa-user"></i>                
-                {{ request.user|capfirst }}                
+            <div class="col-12 h5 mt-1">
+                {% if request.user.profile.profile_pic %}
+                    <div class="profile-image mx-auto"><a href="#" data-bs-toggle="modal" data-bs-target="#imageModal"><img src="{{ MEDIA_URL }}{{ request.user.profile.profile_pic }}" /></a></div>                
+                    {{ request.user|capfirst }}  
+                {% else %}
+                    <div class="profile-image mx-auto"><a href="#" data-bs-toggle="modal" data-bs-target="#imageModal"><img src="{{ MEDIA_URL }}noprofile.png" /></a></div>                
+                    {{ request.user|capfirst }}               
+                {% endif %}                                
+            </div>
+            <!-- Image Upload Modal -->
+            <div class="modal fade" id="imageModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel chatbox">Upload Profile Image</h5>
+                    <button type="button" class="btn-close btn-sm" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <form id="uploadImage" action="{% url 'upload-image' %}" method="POST" enctype="multipart/form-data">
+                            {% csrf_token %}
+                            <div class="input-group mb-3">
+                                <label class="input-group-text" for="inputGroupFile01">Image</label>
+                                <input type="file" name="profile" class="form-control" id="inputGroupFile01">
+                            </div>
+                            <button type="submit" class="btn btn-dark">Save</button>  
+                        </form>
+                    </div>                           
+                </div>
+                </div>
             </div>
             <div class="col-12 border-bottom fst-italic h4 text-start">ChatBoxers</div>
             {% else %}
@@ -49,18 +76,24 @@
                     <div class="modal-dialog">
                     <div class="modal-content chat-content">
                         <div class="modal-header">
-                            <h5 class="modal-title" id="exampleModalLabel"><i class="fas fa-comment-dots"></i> {{ user|capfirst }} </h5>
+                            <h5 class="modal-title" id="exampleModalLabel">{% if user.profile.profile_pic %}
+                                    <div class="profile-image-modal mx-auto"><img src="{{ MEDIA_URL }}{{ user.profile.profile_pic }}" /></div>                
+                                {% else %}
+                                    <div class="profile-image-modal mx-auto"><img src="{{ MEDIA_URL }}noprofile.png" /></a></div>                      
+                                {% endif %}  
+                            </h5>
+                            <div class="h5 my-auto ps-2 mt-2">{{ user|capfirst }}</div>
                             <button type="button" class="btn-close btm-sm h6" data-bs-dismiss="modal" aria-label="Close"></button>
                         </div>
-                        <div class="row m-0 p-2 chatbox"></div>
-                        <div class="modal-body" id="modal-focus">
+                        <div class="row m-0 p-3 chatbox"></div>
+                        <div class="modal-body pt-0 pb-0" id="modal-focus">
                             <form class="submit-message" action="#" method="POST">
                                 {% csrf_token %}
                                 <input type="hidden" id="username" class="username" name="username" value="{{ user.username }}" />
                                 <div class="input-group message">
                                     <textarea id="message" class="form-control" aria-label="With textarea" name="message" required></textarea>
                                 </div>
-                                <button class="btn btn-dark mt-2 btn-sm submit-message">Send <i class="fas fa-share"></i></button>                                                    
+                                <button class="btn btn-dark mt-2 btn-sm submit-message mb-2">Send <i class="fas fa-share"></i></button>                                                    
                             </form>                              
                         </div>
                     </div>

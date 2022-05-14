@@ -1,8 +1,8 @@
 # Django WhatsApp
 
-An App which allows messaging for signed in users. 
+A Web based App which allows messaging for signed in users. 
 
-Works similar to whatsapp with seen and unseen status.
+Works similar to whatsapp with seen and unseen status with real time message update.
 
 ![sign-in](media/Untitled.png)
 
@@ -25,11 +25,11 @@ Live [site](https://whatsapp.hansolo.digital/)
 * HTML5
 * css 
 * javacript (ES6)
-* python (v3.8.6)
+* python (v3.9)
 * Django
-* Django restframework to send messages to frontend via fetch request
+* Django restframework to send messages to frontend via fetch request with needing to reload page
 * SQL database
-* Jquery
+* Jquery mainly for fetch requests
 * Chrome developers tools for analysing scripts and debugging
 * Boostrap 5 for :
     1. page layout purposes and responsive design aspects

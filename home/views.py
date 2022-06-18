@@ -1,8 +1,9 @@
 from django.contrib.auth.signals import user_logged_in
 from django.dispatch import receiver
-from django.shortcuts import render
+from django.shortcuts import render, get_object_or_404
 
 from django.contrib.auth.models import User
+from user_profile.models import ChatRoom
 
 
 # Create your views here

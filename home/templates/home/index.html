@@ -48,6 +48,9 @@
             {% if request.user.is_authenticated %}
             {% for user in users %}
                 {% if user != request.user %}
+                    
+                                                  
+                        
                     <div class="col-12 h5 text-start m-0 ps-3">
                         {% if user.is_authenticated %}
                             <i class="fas fa-circle text-success h6"></i>
@@ -56,7 +59,11 @@
                         {% endif %}
                         {{ user }}
                         {% unread_messages request.user user as counter %}
-                        <i class="fas fa-comment text-primary btn pe-1 ps-1 chatbox-open" data-bs-toggle="modal" data-bs-target="#chatBox-{{ forloop.counter }}" value="{{ user }}"></i>                        
+                        {% for chat_room in request.user.profile_one.all %}
+                            {% if chat_room.user_two == user %}
+                                <i class="fas fa-comment text-primary btn pe-1 ps-1 chatbox-open" data-bs-toggle="modal" data-bs-target="#chatBox-{{ forloop.counter }}" value="{{ chat_room }}"></i>                        
+                            {% endif %}
+                        {% endfor %}
                         {% if counter == 0 %}
                         {% else %}
                             <i class="fas fa-envelope h6" id="chatBox-{{ forloop.counter }}-envelope"></i>

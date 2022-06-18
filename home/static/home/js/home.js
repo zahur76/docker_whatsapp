@@ -42,10 +42,10 @@ $(document).ready(function(){
                 trash = '<i class="fas fa-trash"></i>'
               }
               if(message.sender!=username){                
-                $( ".chatbox" ).append(`<div class="col-10 card pull-2 text-start h5 p-2 fst-italic chat-bg">
+                $( ".chatbox" ).append(`<div class="col-10 card pull-2 text-start h6 p-2 fst-italic chat-bg">
                 ${message.message}<div class="date-text">${d}</div><div class="col-12 text-end h6">${seen} <div class="d-inline text-danger btn btn-sm p-0 clear-message" value=${message.id} data=${message.user_two}>Clear</div><div class="d-inline text-danger btn btn-sm p-0 delete-message" value=${message.id} data=${message.user_two}> ${trash}</div></div></div>`);
               }else{
-                $( ".chatbox" ).append(`<div class="col-10 card offset-2 text-start h5 p-2 fst-italic chat-bg">
+                $( ".chatbox" ).append(`<div class="col-10 card offset-2 text-start h6 p-2 fst-italic chat-bg">
                 ${message.message}<div class="date-text">${d}</div><div class="col-12 text-end date-text"><div class="d-inline text-danger text-danger btn btn-sm p-0 clear-message" value=${message.id} data=${message.user_two}>Clear</div></div></div>`);
               }             
             }); 

@@ -49,6 +49,7 @@ INSTALLED_APPS = [
     'allauth',
     'allauth.account',
     'allauth.socialaccount',
+    'channels',
 
     'home',
     'message',
@@ -96,7 +97,34 @@ TEMPLATES = [
     },
 ]
 
-WSGI_APPLICATION = 'django_whatsapp.wsgi.application'
+# WSGI_APPLICATION = 'django_whatsapp.wsgi.application'
+
+# Channels
+ASGI_APPLICATION = "django_whatsapp.asgi.application"
+
+# channel settings
+if "DEVELOPMENT" in os.environ:
+    CHANNEL_LAYERS = {
+        'default': {           
+            ## Method 2: Via local Redis
+            'BACKEND': 'channels_redis.core.RedisChannelLayer',
+            'CONFIG': {
+                "hosts": [('127.0.0.1', 6379)],
+            },
+        },
+    }
+else:
+    CHANNEL_LAYERS = {
+        'default': {
+            # Via redis lab
+            'BACKEND': 'channels_redis.core.RedisChannelLayer',
+            'CONFIG': {
+                "hosts": [
+                os.environ["REDIS_URL"] 
+                ],
+            },
+        },
+    }
 
 
 # Database

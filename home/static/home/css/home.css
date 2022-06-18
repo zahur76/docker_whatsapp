@@ -31,3 +31,9 @@ img {
     border-radius: 50%;
     margin: 0 auto;
 }
+
+
+.fas.fa-comment:hover {
+    background: lightblue;
+    border-radius: 50%;
+}

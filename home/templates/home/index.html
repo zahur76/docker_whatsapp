@@ -57,7 +57,7 @@
                         {% endif %}
                         {{ user }}
                         {% unread_messages request.user user as counter %}
-                        <i class="fas fa-comment text-primary btn pe-1 ps-1 chatbox-open" data-bs-toggle="modal" data-bs-target="#chatBox-{{ forloop.counter }}" value="{{ user }}" data="{{ chat_room}}"></i>                        
+                        <i class="fas fa-comment text-primary btn pe-1 ps-1 chatbox-open" data-bs-toggle="modal" data-bs-target="#chatBox-{{ forloop.counter }}" value="{{ user }}" data="{{ chat_room}}" data-id="{{ user.id }}"></i>                        
                         {% if counter == 0 %}
                         {% else %}
                             <i class="fas fa-envelope h6" id="chatBox-{{ forloop.counter }}-envelope"></i>

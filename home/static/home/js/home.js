@@ -96,6 +96,15 @@ $(document).ready(function(){
         console.log('Chat socket closed');
     }
 
+    // receive websocket messsage
+    chatSocket.onmessage = function(e) {
+
+      const dataMessage = JSON.parse(e.data);
+
+     console.log(dataMessage)
+
+    }
+
     // submit message via ajax
     let form = $( ".submit-message" )
     form.submit(function(event) {
@@ -126,13 +135,14 @@ $(document).ready(function(){
 
           // send message to websocket
           
-            chatSocket.send(JSON.stringify({
-                'message': message,
-                'receiver': username,
-                'sender': $('#logged-in-user').attr('value'),
-                'message_id': lastEntry.id,
-                'modal_number': modalRef,
-            }));
+          chatSocket.send(JSON.stringify({
+              'type': 'send_message',
+              'message': message,
+              'receiver': username,
+              'sender': $('#logged-in-user').attr('value'),
+              'message_id': lastEntry.id,
+              'modal_number': modalRef,
+          }));
 
           // reload all messages to update
           // responseJson.data.forEach(function(message) {
@@ -175,6 +185,7 @@ $(document).ready(function(){
     let username = $(this).attr('data')
     let csrfToken = $('#csrfmiddlewaretoken').attr('value');
     let loggedInUser = $('#logged-in-user').attr('value');
+
     fetch(`/message/clear_message/${messageId}/${username}`, { method: 'DELETE', headers: {'X-CSRFToken': csrfToken} })
       .then((response) => {
           if (response.ok) {          

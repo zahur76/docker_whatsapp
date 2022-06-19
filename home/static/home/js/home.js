@@ -42,10 +42,10 @@ $(document).ready(function(){
             trash = '<i class="fas fa-trash"></i>'
           }
           if(message.sender!=username){                
-            $(`.chatbox-${modalRef}`).append(`<div class="col-10 card pull-2 text-start h6 p-2 fst-italic chat-bg">
+            $(`.chatbox-${modalRef}`).append(`<div class="chatbox-${message.id} col-10 card pull-2 text-start h6 p-2 fst-italic chat-bg">
             ${message.message}<div class="date-text">${d}</div><div class="col-12 text-end h6">${seen} <div class="d-inline text-danger btn btn-sm p-0 clear-message" value=${message.id} data=${message.user_two}>Clear</div><div class="d-inline text-danger btn btn-sm p-0 delete-message" value=${message.id} data=${message.user_two}> ${trash}</div></div></div>`);
           }else{
-            $(`.chatbox-${modalRef}`).append(`<div class="col-10 card offset-2 text-start h6 p-2 fst-italic chat-bg">
+            $(`.chatbox-${modalRef}`).append(`<div class="chatbox-${message.id} col-10 card offset-2 text-start h6 p-2 fst-italic chat-bg">
             ${message.message}<div class="date-text">${d}</div><div class="col-12 text-end date-text"><div class="d-inline text-danger text-danger btn btn-sm p-0 clear-message" value=${message.id} data=${message.user_two}>Clear</div></div></div>`);
           }             
         }); 
@@ -184,7 +184,6 @@ $(document).ready(function(){
     let messageId = $(this).attr('value')
     let username = $(this).attr('data')
     let csrfToken = $('#csrfmiddlewaretoken').attr('value');
-    let loggedInUser = $('#logged-in-user').attr('value');
 
     fetch(`/message/clear_message/${messageId}/${username}`, { method: 'DELETE', headers: {'X-CSRFToken': csrfToken} })
       .then((response) => {
@@ -195,34 +194,7 @@ $(document).ready(function(){
         })
         .then((responseJson) => {            
             // clear chat box and update messages
-            $( ".chatbox" ).html('');
-            // reload all messages to update
-            responseJson.data.forEach(function(message) {
-              // covert date format
-              $('textarea').val('');
-              var d = new Date(message.created_at);
-              var options = { year: 'numeric', month: 'long', day: 'numeric', hour12: true,
-                            hour: "2-digit",
-                            minute: "2-digit"};
-              d = d.toLocaleDateString("en-US", options)
-              let seen = 'Seen'
-              if(message.message_read){
-                seen = 'Seen'
-              }else{
-                seen = "Unseen"
-              }
-              let trash = ''
-              if(message.message!='Message Deleted'){
-                trash = '<i class="fas fa-trash"></i>'
-              }
-              if(message.sender==loggedInUser){                
-                $( ".chatbox" ).append(`<div class="col-10 card pull-2 text-start h5 p-2 fst-italic chat-bg">
-                ${message.message}<div class="date-text">${d}</div><div class="col-12 text-end h6">${seen} <div class="d-inline text-danger btn btn-sm p-0 clear-message" value=${message.id} data=${message.user_two}>Clear</div><div class="d-inline text-danger btn btn-sm p-0 delete-message" value=${message.id} data=${message.user_two}> ${trash}</div></div></div>`);
-              }else{
-                $( ".chatbox" ).append(`<div class="col-10 card offset-2 text-start h5 p-2 fst-italic chat-bg">
-                ${message.message}<div class="date-text">${d}</div><div class="col-12 text-end date-text"><div class="d-inline text-danger text-danger btn btn-sm p-0 clear-message" value=${message.id} data=${message.user_two}>Clear</div></div></div>`);
-              }            
-            });              
+            $(`.chatbox-${messageId}`).hide('slow');                          
         })
         .catch((error) => {
               console.log(error)
@@ -234,7 +206,7 @@ $(document).ready(function(){
     let messageId = $(this).attr('value');
     let username = $(this).attr('data');
     let csrfToken = $('#csrfmiddlewaretoken').attr('value');
-    let loggedInUser = $('#logged-in-user').attr('value');
+
     fetch(`/message/delete_message/${messageId}/${username}`, { method: 'DELETE', headers: {'X-CSRFToken': csrfToken} })
       .then((response) => {
           if (response.ok) {          
@@ -243,35 +215,8 @@ $(document).ready(function(){
           throw new Error('Something went wrong');
         })
         .then((responseJson) => {
-          // clear chat box and update messages
-          $( ".chatbox" ).html('');
-          // reload all messages to update
-          responseJson.data.forEach(function(message) {
-            // covert date format
-            $('textarea').val('');
-            var d = new Date(message.created_at);
-            var options = { year: 'numeric', month: 'long', day: 'numeric', hour12: true,
-                          hour: "2-digit",
-                          minute: "2-digit"};
-            d = d.toLocaleDateString("en-US", options)
-            let seen = 'Seen'
-            if(message.message_read){
-              seen = 'Seen'
-            }else{
-              seen = "Unseen"
-            }
-            let trash = ''
-            if(message.message!='Message Deleted'){
-              trash = '<i class="fas fa-trash"></i>'
-            }
-            if(message.sender==loggedInUser){                
-              $( ".chatbox" ).append(`<div class="col-10 card pull-2 text-start h5 p-2 fst-italic chat-bg">
-              ${message.message}<div class="date-text">${d}</div><div class="col-12 text-end h6">${seen} <div class="d-inline text-danger btn btn-sm p-0 clear-message" value=${message.id} data=${message.user_two}>Clear</div><div class="d-inline text-danger btn btn-sm p-0 delete-message" value=${message.id} data=${message.user_two}> ${trash}</i></div></div></div>`);
-            }else{
-              $( ".chatbox" ).append(`<div class="col-10 card offset-2 text-start h5 p-2 fst-italic chat-bg">
-              ${message.message}<div class="date-text">${d}</div><div class="col-12 text-end date-text"><div class="d-inline text-danger text-danger btn btn-sm p-0 clear-message" value=${message.id} data=${message.user_two}>Clear</div></div></div>`);
-            }             
-          });    
+            // clear chat box and update messages
+            $(`.chatbox-${messageId}`).html('Message Deleted!');                   
         })
         .catch((error) => {
               console.log(error)

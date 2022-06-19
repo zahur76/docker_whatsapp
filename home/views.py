@@ -15,9 +15,6 @@ def get_chat_room(*args, **kwargs):
     user_one = get_object_or_404(User, username=kwargs['user_one'])
     user_two = get_object_or_404(User, username=kwargs['user_two'])   
 
-    print(user_one)
-    print(user_two)
-
     chat_room = get_object_or_404(ChatRoom, user_one=user_one, user_two=user_two)
 
     return chat_room

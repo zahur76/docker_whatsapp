@@ -143,10 +143,9 @@ def clear_message(request, message_id, username):
 
     user_two = get_object_or_404(User, id=username)
 
-    print(user_two)
-
     all_messages = UserMessage.objects.filter(user=request.user, user_two=user_two)
     serializer = MessageSerializer(all_messages, many=True)
+
             
     return JsonResponse({'data': serializer.data})
 

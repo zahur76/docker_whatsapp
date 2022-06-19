@@ -1,60 +1,61 @@
 $(document).ready(function(){
 
   // JS for chatbox
-  
+ 
   // Remove unread messages when chat box openned and load messages
-    $('.chatbox-open').click(function(){
-      $(".modal").animate({scrollTop: $('#modal-focus').offset().top + 9999}, 200);
-    
-      let csrfToken = $('#csrfmiddlewaretoken').attr('value');
-      let username = $(this).attr('value')
-      let counter = $(this).attr('data-bs-target') + '-unread'
-      let envelope = $(this).attr('data-bs-target') + '-envelope'
+  $('.chatbox-open').click(function(){
+    $(".modal").animate({scrollTop: $('#modal-focus').offset().top + 9999}, 200);
+  
+    let csrfToken = $('#csrfmiddlewaretoken').attr('value');
+    let username = $(this).attr('value') // the receiver of a sent message
+    let counter = $(this).attr('data-bs-target') + '-unread'
+    let envelope = $(this).attr('data-bs-target') + '-envelope'
+    let modalRef = $(this).attr('data');
 
-      // clear chat box and make new request
-      $( ".chatbox" ).html('');
+    // clear chat box and make new request
+    $( ".chatbox" ).html('');
 
-      // request all messages from authenticated logged in user and contact
-      fetch(`/message/userMessages/${username}`)
-      .then((response) => {
-          if (response.ok) {        
-              return response.json();
+    // request and load all messages from authenticated logged in user and contact when modal openned
+    fetch(`/message/userMessages/${username}`)
+    .then((response) => {
+        if (response.ok) {        
+            return response.json();
+        }
+        throw new Error('Something went wrong');
+      })
+      .then((responseJson) => {
+        responseJson.forEach(function(message) {
+          // covert date format
+          var d = new Date(message.created_at);
+          var options = { year: 'numeric', month: 'long', day: 'numeric', hour12: true,
+                        hour: "2-digit",
+                        minute: "2-digit"};
+          d = d.toLocaleDateString("en-US", options)
+          let seen = 'Seen'
+          if(message.message_read){
+            seen = 'Seen'
+          }else{
+            seen = "Unseen"
           }
-          throw new Error('Something went wrong');
-        })
-        .then((responseJson) => {
-          responseJson.forEach(function(message) {
-            // covert date format
-            var d = new Date(message.created_at);
-            var options = { year: 'numeric', month: 'long', day: 'numeric', hour12: true,
-                          hour: "2-digit",
-                          minute: "2-digit"};
-            d = d.toLocaleDateString("en-US", options)
-            let seen = 'Seen'
-            if(message.message_read){
-              seen = 'Seen'
-            }else{
-              seen = "Unseen"
-            }
-            let trash = '';              
-            if(message.message!='Message Deleted'){
-              trash = '<i class="fas fa-trash"></i>'
-            }
-            if(message.sender!=username){                
-              $( ".chatbox" ).append(`<div class="col-10 card pull-2 text-start h6 p-2 fst-italic chat-bg">
-              ${message.message}<div class="date-text">${d}</div><div class="col-12 text-end h6">${seen} <div class="d-inline text-danger btn btn-sm p-0 clear-message" value=${message.id} data=${message.user_two}>Clear</div><div class="d-inline text-danger btn btn-sm p-0 delete-message" value=${message.id} data=${message.user_two}> ${trash}</div></div></div>`);
-            }else{
-              $( ".chatbox" ).append(`<div class="col-10 card offset-2 text-start h6 p-2 fst-italic chat-bg">
-              ${message.message}<div class="date-text">${d}</div><div class="col-12 text-end date-text"><div class="d-inline text-danger text-danger btn btn-sm p-0 clear-message" value=${message.id} data=${message.user_two}>Clear</div></div></div>`);
-            }             
-          }); 
-        })
-        .catch((error) => {
-              console.log(error)
-      });       
-      
-      // mark messages as read
-      fetch(`/message/messages_read/${username}`, { method: 'UPDATE', headers: {'X-CSRFToken': csrfToken} })
+          let trash = '';              
+          if(message.message!='Message Deleted'){
+            trash = '<i class="fas fa-trash"></i>'
+          }
+          if(message.sender!=username){                
+            $(`.chatbox-${modalRef}`).append(`<div class="col-10 card pull-2 text-start h6 p-2 fst-italic chat-bg">
+            ${message.message}<div class="date-text">${d}</div><div class="col-12 text-end h6">${seen} <div class="d-inline text-danger btn btn-sm p-0 clear-message" value=${message.id} data=${message.user_two}>Clear</div><div class="d-inline text-danger btn btn-sm p-0 delete-message" value=${message.id} data=${message.user_two}> ${trash}</div></div></div>`);
+          }else{
+            $(`.chatbox-${modalRef}`).append(`<div class="col-10 card offset-2 text-start h6 p-2 fst-italic chat-bg">
+            ${message.message}<div class="date-text">${d}</div><div class="col-12 text-end date-text"><div class="d-inline text-danger text-danger btn btn-sm p-0 clear-message" value=${message.id} data=${message.user_two}>Clear</div></div></div>`);
+          }             
+        }); 
+      })
+      .catch((error) => {
+            console.log(error)
+    });       
+    
+    // mark messages as read when modal openned
+    fetch(`/message/messages_read/${username}`, { method: 'UPDATE', headers: {'X-CSRFToken': csrfToken} })
       .then((response) => {
           if (response.ok) {          
               return response.json();
@@ -69,48 +70,48 @@ $(document).ready(function(){
         })
         .catch((error) => {
               console.log(error)
-      });
+    });
 
-      // WebSocket logic
+    // WEBSOCKET LOGIC!
 
+    // open websocket
+    var roomName = $(this).attr('data');
 
-      // open websocket
-      var roomName = $(this).attr('data');
+    const chatSocket = new WebSocket(
+        'ws://' + window.location.host + '/ws/chat/' + roomName + '/');
 
-      const chatSocket = new WebSocket(
-          'ws://' + window.location.host + '/ws/chat/' + roomName + '/');
+    chatSocket.onopen = function open() {
+        console.log('WebSockets connection created.');
+    };
 
-      chatSocket.onopen = function open() {
-          console.log('WebSockets connection created.');
-      };
+    // close websocket 
+    $(`.user-modal-close-${username}`).click(function(){
 
-      // close websocket 
-      $(`.user-modal-close-${username}`).click(function(){
-        chatSocket.close()         
-      })
+      $(`.chatbox-${modalRef}`).html(''); //remove all messages
+      chatSocket.close()
 
-      chatSocket.onclose = function(e) {
-          console.log('Chat socket closed');
-      }
+    })
 
-      
-  })
+    chatSocket.onclose = function(e) {
+        console.log('Chat socket closed');
+    }
 
-  // submit message via ajax
-  let form = $( ".submit-message" )
-  form.submit(function(event) {
-      event.preventDefault();
-      let username = $.trim(this.username.value)
-      let message = $.trim(this.message.value)
-      let csrfToken = $('#csrfmiddlewaretoken').attr('value');
+    // submit message via ajax
+    let form = $( ".submit-message" )
+    form.submit(function(event) {
+      if(chatSocket.readyState == WebSocket.OPEN) {
+        event.preventDefault();
+        let username = $.trim(this.username.value)
+        let message = $.trim(this.message.value)
+        let csrfToken = $('#csrfmiddlewaretoken').attr('value');
 
-      let data = {
-          'username': username,
-          'message': message,
-      }
+        let data = {
+            'username': username,
+            'message': message,
+        }
 
-      fetch(`/message/send_message`, { method: 'POST', headers: {'X-CSRFToken': csrfToken}, body: JSON.stringify(data)})
-      .then((response) => {
+        fetch(`/message/send_message`, { method: 'POST', headers: {'X-CSRFToken': csrfToken}, body: JSON.stringify(data)})
+        .then((response) => {
           if (response.ok) {          
               return response.json();
           }
@@ -118,39 +119,55 @@ $(document).ready(function(){
         })
         .then((responseJson) => {
           // clear chat box and make new request
-          $( ".chatbox" ).html('');
+          $(".chatbox" ).html('');
+          $('textarea').val('');
+
+          let lastEntry = responseJson.data[responseJson.data.length-1]
+
+          // send message to websocket
+          
+            chatSocket.send(JSON.stringify({
+                'message': message,
+                'receiver': username,
+                'sender': $('#logged-in-user').attr('value'),
+                'message_id': lastEntry.id,
+                'modal_number': modalRef,
+            }));
+
           // reload all messages to update
-          responseJson.data.forEach(function(message) {
+          // responseJson.data.forEach(function(message) {
             // covert date format
-            $('textarea').val('');
-            var d = new Date(message.created_at);
-            var options = { year: 'numeric', month: 'long', day: 'numeric', hour12: true,
-                          hour: "2-digit",
-                          minute: "2-digit"};
-            d = d.toLocaleDateString("en-US", options)
-            let seen = 'Seen'
-            if(message.message_read){
-              seen = 'Seen'
-            }else{
-              seen = "Unseen"
-            }
-            let trash = ''
-            if(message.message!='Message Deleted'){
-              trash = '<i class="fas fa-trash"></i>'
-            }
-            if(message.sender!=username){                
-              $( ".chatbox" ).append(`<div class="col-10 card pull-2 text-start h5 p-2 fst-italic chat-bg">
-              ${message.message}<div class="date-text">${d}</div><div class="col-12 text-end h6">${seen} <div class="d-inline text-danger btn btn-sm p-0 clear-message" value=${message.id} data=${message.user_two}>Clear</div><div class="d-inline text-danger btn btn-sm p-0 delete-message" value=${message.id} data=${message.user_two}> ${trash}</i></div></div></div>`);
-            }else{
-              $( ".chatbox" ).append(`<div class="col-10 card offset-2 text-start h5 p-2 fst-italic chat-bg">
-              ${message.message}<div class="date-text">${d}</div><div class="col-12 text-end date-text"><div class="d-inline text-danger text-danger btn btn-sm p-0 clear-message" value=${message.id} data=${message.user_two}>Clear</div></div></div>`);
-            }          
-          });
+            
+          //   var d = new Date(message.created_at);
+          //   var options = { year: 'numeric', month: 'long', day: 'numeric', hour12: true,
+          //                 hour: "2-digit",
+          //                 minute: "2-digit"};
+          //   d = d.toLocaleDateString("en-US", options)
+          //   let seen = 'Seen'
+          //   if(message.message_read){
+          //     seen = 'Seen'
+          //   }else{
+          //     seen = "Unseen"
+          //   }
+          //   let trash = ''
+          //   if(message.message!='Message Deleted'){
+          //     trash = '<i class="fas fa-trash"></i>'
+          //   }
+          //   if(message.sender!=username){                
+          //     $( ".chatbox" ).append(`<div class="col-10 card pull-2 text-start h5 p-2 fst-italic chat-bg">
+          //     ${message.message}<div class="date-text">${d}</div><div class="col-12 text-end h6">${seen} <div class="d-inline text-danger btn btn-sm p-0 clear-message" value=${message.id} data=${message.user_two}>Clear</div><div class="d-inline text-danger btn btn-sm p-0 delete-message" value=${message.id} data=${message.user_two}> ${trash}</i></div></div></div>`);
+          //   }else{
+          //     $( ".chatbox" ).append(`<div class="col-10 card offset-2 text-start h5 p-2 fst-italic chat-bg">
+          //     ${message.message}<div class="date-text">${d}</div><div class="col-12 text-end date-text"><div class="d-inline text-danger text-danger btn btn-sm p-0 clear-message" value=${message.id} data=${message.user_two}>Clear</div></div></div>`);
+          //   }          
+          // });
         })
         .catch((error) => {
               console.log(error)
         });
-  });
+      }
+    });
+  })  
 
   // clear messages from dialog box
   $(document).on('click', '.clear-message', function(){

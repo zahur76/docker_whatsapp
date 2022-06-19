@@ -217,6 +217,8 @@ $(document).ready(function(){
     let username = $(this).attr('data')
     let csrfToken = $('#csrfmiddlewaretoken').attr('value');
 
+    $(this).html("<img class='loading-gif' src='https://th.bing.com/th/id/R.5572838d351b66bf6a3350b6d8d23cb8?rik=PF28C%2buoVI57pg&pid=ImgRaw&r=0' />")
+
     fetch(`/message/clear_message/${messageId}/${username}`, { method: 'DELETE', headers: {'X-CSRFToken': csrfToken} })
       .then((response) => {
           if (response.ok) {          

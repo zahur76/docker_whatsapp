@@ -34,19 +34,19 @@ $(document).ready(function(){
           d = d.toLocaleDateString("en-US", options)
           let seen = 'Seen'
           if(message.message_read){
-            seen = 'Seen'
+            seen = '<i class="fas fa-check-double text-success"></i>'
           }else{
-            seen = "Unseen"
+            seen = '<i class="fas fa-check text-secondary"></i>'
           }
           let trash = '';              
           if(message.message!='Message Deleted'){
             trash = '<i class="fas fa-trash"></i>'
           }
           if(message.sender!=username){                
-            $(`.chatbox-${modalRef}`).append(`<div class="chatbox-${message.id} col-10 card pull-2 text-start h6 fw-normal p-2 fst-italic chat-bg ">
-            ${message.message}<div class="date-text fw-light">${d}</div><div class="col-12 text-end fs-6 fw-light">${seen} <div class="d-inline text-danger btn btn-sm p-0 clear-message" value=${message.id} data=${message.user_two}>Clear</div><div class="d-inline text-danger btn btn-sm p-0 delete-message" value=${message.id} data=${message.user_two}> ${trash}</div></div></div>`);
+            $(`.chatbox-${modalRef}`).append(`<div class="chatbox-${message.id} col-10 card pull-2 text-start h6 fw-normal p-2 fst-italic chat-bg-send">
+            ${message.message}<div class="date-text fw-light">${d}</div><div class="col-12 text-end fw-light h6">${seen} <div class="d-inline text-danger btn btn-sm p-0 clear-message" value=${message.id} data=${message.user_two}>Clear</div><div class="d-inline text-danger btn btn-sm p-0 delete-message" value=${message.id} data=${message.user_two}> ${trash}</div></div></div>`);
           }else{
-            $(`.chatbox-${modalRef}`).append(`<div class="chatbox-${message.id} col-10 card offset-2 text-start h6 fw-normal p-2 fst-italic chat-bg">
+            $(`.chatbox-${modalRef}`).append(`<div class="chatbox-${message.id} col-10 card offset-2 text-start h6 fw-normal p-2 fst-italic chat-bg-receive">
             ${message.message}<div class="date-text fw-light">${d}</div><div class="col-12 text-end date-text"><div class="d-inline text-danger text-danger btn btn-sm p-0 clear-message fw-normal" value=${message.id} data=${message.user_two}>Clear</div></div></div>`);
           }             
         }); 
@@ -104,19 +104,19 @@ $(document).ready(function(){
 
       let seen = 'Seen';
       if(dataMessage.users!='1'){
-        seen = 'Seen'
+        seen = '<i class="fas fa-check-double text-success"></i>'
       }else{
-        seen = "Unseen"
+        seen = '<i class="fas fa-check text-secondary"></i>'
       }
       let trash = '';              
       if(dataMessage.message!='Message Deleted'){
         trash = '<i class="h6 fas fa-trash"></i>'
       }
       if(dataMessage.sender!=username){                
-        $(`.chatbox-${modalRef}`).append(`<div class="chatbox-${dataMessage.message_id-1} col-10 card pull-2 text-start h6 fw-normal p-2 fst-italic chat-bg">
+        $(`.chatbox-${modalRef}`).append(`<div class="chatbox-${dataMessage.message_id-1} col-10 card pull-2 text-start h6 fw-normal p-2 fst-italic chat-bg-send">
         ${dataMessage.message}<div class="date-text fw-light">${dataMessage.created_at}</div><div class="col-12 text-end h6 fw-light fs-6">${seen} <div class="d-inline text-danger btn btn-sm p-0 clear-message" value=${dataMessage.message_id-1} data=${usernameId}>Clear</div><div class="d-inline text-danger btn btn-sm p-0 delete-message" value=${dataMessage.message_id-1} data=${usernameId}> ${trash}</div></div></div>`);
       }else{
-        $(`.chatbox-${modalRef}`).append(`<div class="chatbox-${dataMessage.message_id} col-10 card offset-2 text-start h6 fw-normal p-2 fst-italic chat-bg">
+        $(`.chatbox-${modalRef}`).append(`<div class="chatbox-${dataMessage.message_id} col-10 card offset-2 text-start h6 fw-normal p-2 fst-italic chat-bg-receive">
         ${dataMessage.message}<div class="date-text fw-light">${dataMessage.created_at}</div><div class="col-12 text-end date-text"><div class="d-inline text-danger text-danger btn btn-sm p-0 clear-message" value=${dataMessage.message_id} data=${usernameId}>Clear</div></div></div>`);
       }
     }
@@ -128,6 +128,9 @@ $(document).ready(function(){
         let username = $.trim(this.username.value)
         let message = $.trim(this.message.value)
         let csrfToken = $('#csrfmiddlewaretoken').attr('value');
+
+        let sendBtn = $(this).attr('id');
+        $(`.${sendBtn}`).html("<img class='loading-gif' src='https://th.bing.com/th/id/R.5572838d351b66bf6a3350b6d8d23cb8?rik=PF28C%2buoVI57pg&pid=ImgRaw&r=0' />")
 
         let data = {
             'username': username,
@@ -142,6 +145,7 @@ $(document).ready(function(){
           throw new Error('Something went wrong');
         })
         .then((responseJson) => {
+          $(`.${sendBtn}`).html('Send <i class="fas fa-share"></i>')
           // clear chat box and make new request
           $(".chatbox" ).html('');
           $('textarea').val('');
@@ -159,33 +163,6 @@ $(document).ready(function(){
               'modal_number': modalRef,
           }));
 
-          // reload all messages to update
-          // responseJson.data.forEach(function(message) {
-            // covert date format
-            
-          //   var d = new Date(message.created_at);
-          //   var options = { year: 'numeric', month: 'long', day: 'numeric', hour12: true,
-          //                 hour: "2-digit",
-          //                 minute: "2-digit"};
-          //   d = d.toLocaleDateString("en-US", options)
-          //   let seen = 'Seen'
-          //   if(message.message_read){
-          //     seen = 'Seen'
-          //   }else{
-          //     seen = "Unseen"
-          //   }
-          //   let trash = ''
-          //   if(message.message!='Message Deleted'){
-          //     trash = '<i class="fas fa-trash"></i>'
-          //   }
-          //   if(message.sender!=username){                
-          //     $( ".chatbox" ).append(`<div class="col-10 card pull-2 text-start h5 p-2 fst-italic chat-bg">
-          //     ${message.message}<div class="date-text">${d}</div><div class="col-12 text-end h6">${seen} <div class="d-inline text-danger btn btn-sm p-0 clear-message" value=${message.id} data=${message.user_two}>Clear</div><div class="d-inline text-danger btn btn-sm p-0 delete-message" value=${message.id} data=${message.user_two}> ${trash}</i></div></div></div>`);
-          //   }else{
-          //     $( ".chatbox" ).append(`<div class="col-10 card offset-2 text-start h5 p-2 fst-italic chat-bg">
-          //     ${message.message}<div class="date-text">${d}</div><div class="col-12 text-end date-text"><div class="d-inline text-danger text-danger btn btn-sm p-0 clear-message" value=${message.id} data=${message.user_two}>Clear</div></div></div>`);
-          //   }          
-          // });
         })
         .catch((error) => {
               console.log(error)

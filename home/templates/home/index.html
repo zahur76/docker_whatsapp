@@ -88,13 +88,13 @@
                         </div>
                         <div class="row m-0 p-3 chatbox-{{ chat_room }}"></div>
                         <div class="modal-body pt-0 pb-0" id="modal-focus">
-                            <form class="submit-message" action="#" method="POST">
+                            <form class="submit-message" action="#" method="POST" id="gif-{{ forloop.counter }}">
                                 {% csrf_token %}
                                 <input type="hidden" id="username" class="username" name="username" value="{{ user.username }}" />
                                 <div class="input-group message">
                                     <textarea id="message" class="form-control" aria-label="With textarea" name="message" required></textarea>
                                 </div>
-                                <button class="btn btn-dark mt-2 btn-sm submit-message mb-2">Send <i class="fas fa-share"></i></button>                                                    
+                                <button class="btn btn-dark mt-2 btn-sm submit-message gif-{{ forloop.counter }} mb-2">Send <i class="fas fa-share"></i></button>                                                    
                             </form>                              
                         </div>
                     </div>

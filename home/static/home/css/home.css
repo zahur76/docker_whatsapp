@@ -6,8 +6,12 @@
     font-size: 12px !important;
 }
 
-.chat-bg {
-    background-color: rgb(176, 255, 176);
+.chat-bg-send {
+    background-color: rgb(186, 255, 186);
+}
+
+.chat-bg-receive {
+    background-color: rgb(230, 229, 253);
 }
 
 .chat-content {
@@ -36,4 +40,17 @@ img {
 .fas.fa-comment:hover {
     background: lightblue;
     border-radius: 50%;
+}
+
+.loading-gif {
+    height: 20px;
+    width: 20px;
+}
+
+.clear-message:hover, .delete-message:hover {
+    color: rgb(255, 134, 134) !important;
+}
+
+.seen {
+    font-weight: 3px !important;   
 }

@@ -72,6 +72,27 @@ $(document).ready(function(){
       });
 
       // WebSocket logic
+
+
+      // open websocket
+      var roomName = $(this).attr('data');
+
+      const chatSocket = new WebSocket(
+          'ws://' + window.location.host + '/ws/chat/' + roomName + '/');
+
+      chatSocket.onopen = function open() {
+          console.log('WebSockets connection created.');
+      };
+
+      // close websocket 
+      $(`.user-modal-close-${username}`).click(function(){
+        chatSocket.close()         
+      })
+
+      chatSocket.onclose = function(e) {
+          console.log('Chat socket closed');
+      }
+
       
   })
 

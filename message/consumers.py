@@ -1,5 +1,6 @@
 # chat/consumers.py
 import json
+import re
 from channels.generic.websocket import AsyncWebsocketConsumer
 from django.dispatch import receiver
 from .models import UserMessage
@@ -36,15 +37,15 @@ class ChatConsumer(AsyncWebsocketConsumer):
     # Receive message from WebSocket
     async def receive(self, text_data):
         text_data_json = json.loads(text_data)
-        type = text_data_json['type']
-        message = text_data_json['message']
-        receiver = text_data_json['receiver']
-        sender = text_data_json['sender']
-        message_id = text_data_json['message_id']
-        modal_number = text_data_json['modal_number']
 
-        # Send message to room group
-        if type == 'send_message':
+        if text_data_json['type'] =='send_message':
+            message = text_data_json['message']
+            receiver = text_data_json['receiver']
+            sender = text_data_json['sender']
+            message_id = text_data_json['message_id']
+            modal_number = text_data_json['modal_number']
+
+            # Send message to room group
             await self.channel_layer.group_send(
                 self.room_group_name,
                 {
@@ -54,6 +55,19 @@ class ChatConsumer(AsyncWebsocketConsumer):
                     'sender': sender,
                     'message_id': int(message_id)+1,
                     'modal_number': modal_number,
+                }
+            )
+        
+        if text_data_json['type'] == 'delete_message':
+            message_id = text_data_json['message_id']
+            receiver = text_data_json['receiver']
+
+            await self.channel_layer.group_send(
+                self.room_group_name,
+                {
+                    'type': 'delete_message',
+                    'message_id': message_id,
+                    'receiver': receiver,
                 }
             )
 
@@ -68,7 +82,7 @@ class ChatConsumer(AsyncWebsocketConsumer):
         # Send message to WebSocket
         print(event)
         await self.send(text_data=json.dumps({
-            'type': 'send  message',
+            'type': 'send message',
             'message': message,
             'sender': sender,
             'receiver': receiver,
@@ -78,4 +92,16 @@ class ChatConsumer(AsyncWebsocketConsumer):
             'random_two': SG("[\\u\\d]{12}").render(),
             'message_id': message_id,
             'modal_number': modal_number
+        }))
+    
+    async def delete_message(self, event):
+        message_id = event['message_id']
+        receiver = event['receiver']   
+
+        # Send message to WebSocket
+        print(event)
+        await self.send(text_data=json.dumps({
+            'type': 'delete message',
+            'message': message_id,
+            'receiver': receiver,
         }))

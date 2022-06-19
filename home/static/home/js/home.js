@@ -104,8 +104,6 @@ $(document).ready(function(){
       
       const dataMessage = JSON.parse(e.data);
 
-      console.log(dataMessage)
-
       if(dataMessage.type=='send message'){
         let seen = 'Seen';
         if(dataMessage.users!='1'){

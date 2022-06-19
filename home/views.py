@@ -4,6 +4,23 @@ from django.shortcuts import render, get_object_or_404
 
 from django.contrib.auth.models import User
 from user_profile.models import ChatRoom
+from django.template.defaulttags import register
+
+
+# filters
+@register.simple_tag
+def get_chat_room(*args, **kwargs):
+    """ custom template to get chat room name """
+
+    user_one = get_object_or_404(User, username=kwargs['user_one'])
+    user_two = get_object_or_404(User, username=kwargs['user_two'])   
+
+    print(user_one)
+    print(user_two)
+
+    chat_room = get_object_or_404(ChatRoom, user_one=user_one, user_two=user_two)
+
+    return chat_room
 
 
 # Create your views here

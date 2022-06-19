@@ -33,7 +33,7 @@
                             {% csrf_token %}
                             <div class="input-group mb-3">
                                 <label class="input-group-text" for="inputGroupFile01">Image</label>
-                                <input type="file" name="profile" class="form-control" id="inputGroupFile01" required>
+                                <input type="file" name="profile" class="form-control" id="inputGroupFile01">
                             </div>
                             <button type="submit" class="btn btn-dark">Save</button>  
                         </form>
@@ -46,11 +46,9 @@
             <div class="col-12 fst-italic h4 text-center p-3">Please Login</div>
             {% endif %}           
             {% if request.user.is_authenticated %}
-            {% for user in users %}
+            {% for user in users %}                
                 {% if user != request.user %}
-                    
-                                                  
-                        
+                    {% get_chat_room user_one=request.user user_two=user as chat_room %}
                     <div class="col-12 h5 text-start m-0 ps-3">
                         {% if user.is_authenticated %}
                             <i class="fas fa-circle text-success h6"></i>
@@ -59,11 +57,7 @@
                         {% endif %}
                         {{ user }}
                         {% unread_messages request.user user as counter %}
-                        {% for chat_room in request.user.profile_one.all %}
-                            {% if chat_room.user_two == user %}
-                                <i class="fas fa-comment text-primary btn pe-1 ps-1 chatbox-open" data-bs-toggle="modal" data-bs-target="#chatBox-{{ forloop.counter }}" value="{{ chat_room }}"></i>                        
-                            {% endif %}
-                        {% endfor %}
+                        <i class="fas fa-comment text-primary btn pe-1 ps-1 chatbox-open" data-bs-toggle="modal" data-bs-target="#chatBox-{{ forloop.counter }}" value="{{ user }}" data="{{ chat_room}}"></i>                        
                         {% if counter == 0 %}
                         {% else %}
                             <i class="fas fa-envelope h6" id="chatBox-{{ forloop.counter }}-envelope"></i>

@@ -77,7 +77,7 @@ $(document).ready(function(){
 
     // WEBSOCKET LOGIC!
 
-    // open websocket using wss for production
+    // open websocket using wss for production instead of ws
     var roomName = $(this).attr('data');
 
     const chatSocket = new WebSocket(

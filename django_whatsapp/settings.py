@@ -231,7 +231,7 @@ if "USE_AWS" in os.environ:
 # Default primary key field type
 # https://docs.djangoproject.com/en/4.0/ref/settings/#default-auto-field
 
-# Email configuration
+# Email configuration using send grid
 
 if 'DEVELOPMENT' in os.environ:
     EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'

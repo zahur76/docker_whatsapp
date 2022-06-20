@@ -8,11 +8,11 @@ Make use of django channel with websockets for asynchronous message sending to c
 
 Can also upload and change profile photo by clicking on image.
 
+Live [site](https://django-whatsapp-zm.herokuapp.com/)
+
 ![sign-in](media/Untitled.png)
 
 ![sign-in](media/whatsapp2.png)
-
-Live [site](https://django-whatsapp-zm.herokuapp.com/)
 
 ![screen shot](/media/screen.png?)
 

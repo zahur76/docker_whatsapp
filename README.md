@@ -10,6 +10,8 @@ Can also upload and change profile photo by clicking on image.
 
 Live [site](https://django-whatsapp-zm.herokuapp.com/)
 
+![sign-in](media/video.gif)
+
 ![sign-in](media/Untitled.png)
 
 ![sign-in](media/whatsapp2.png)

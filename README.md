@@ -31,6 +31,8 @@ Live [site](https://whatsapp.hansolo.digital/)
 * javacript (ES6)
 * python (v3.9)
 * Django
+* Channels for async message system
+* Redis for aysnc message system
 * Django restframework to send messages to frontend via fetch request with needing to reload page
 * SQL database
 * Jquery mainly for fetch requests

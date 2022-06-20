@@ -81,7 +81,7 @@ $(document).ready(function(){
     var roomName = $(this).attr('data');
 
     const chatSocket = new WebSocket(
-        'ws://' + window.location.host + '/ws/chat/' + roomName + '/');
+        'wss://' + window.location.host + '/ws/chat/' + roomName + '/');
 
     chatSocket.onopen = function open() {
         console.log('WebSockets connection created.');

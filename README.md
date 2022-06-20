@@ -23,6 +23,9 @@ Live [site](https://django-whatsapp-zm.herokuapp.com/)
 * run ```python manage.py createsuperuser```
 * run ```python manage.py runserver```
 
+## COLLECTSTATIC
+
+```python manage.py collectstatic --noinput -i fontawesomefree```
 
 ## TECHNOLOGIES USED
 

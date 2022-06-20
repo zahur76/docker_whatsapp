@@ -245,3 +245,4 @@ else:
     DEFAULT_FROM_EMAIL = 'zahur@hansolo76.com'
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+

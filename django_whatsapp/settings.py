@@ -190,7 +190,7 @@ STATIC_URL = "/static/"
 # For main static file not tied up to app and in base_dir/Required for base.css so django will look here too
 STATICFILES_DIRS = (os.path.join(BASE_DIR, "static"),)
 
-STATIC_ROOT = os.path.join(BASE_DIR, "staticfiles")
+# STATIC_ROOT = os.path.join(BASE_DIR, "staticfiles")
 
 # where media files are served https://127.0.0.1/media/{file}
 MEDIA_URL = "/media/"

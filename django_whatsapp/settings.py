@@ -31,9 +31,9 @@ SECRET_KEY = os.environ.get("SECRET_KEY")
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ["django-whatsapp-zahur.herokuapp.com", "localhost", "127.0.0.1"]
+ALLOWED_HOSTS = ["django-whatsapp-zm.herokuapp.com", "localhost", "127.0.0.1"]
 
-CSRF_TRUSTED_ORIGINS = ["https://django-whatsapp-zahur.herokuapp.com"]
+CSRF_TRUSTED_ORIGINS = ["https://django-whatsapp-zm.herokuapp.com"]
 
 
 # Application definition

@@ -14,6 +14,8 @@ Can also upload and change profile photo by clicking on image.
 
 Live [site](https://django-whatsapp-zm.herokuapp.com/)
 
+![screen shot](/media/screen.png?)
+
 ## INSTALLATION
 
 * clone repo 

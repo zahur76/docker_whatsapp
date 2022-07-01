@@ -13,10 +13,10 @@
             {% if request.user.is_authenticated %}
             <div class="col-12 h5 mt-1">
                 {% if request.user.profile.profile_pic %}
-                    <div class="profile-image mx-auto"><a href="#" data-bs-toggle="modal" data-bs-target="#imageModal"><img src="{{ MEDIA_URL }}{{ request.user.profile.profile_pic }}" /></a></div>                
+                    <div class="profile-image mx-auto"><a href="#" data-bs-toggle="modal" data-bs-target="#imageModal"><img src="https://media.istockphoto.com/vectors/default-profile-picture-avatar-photo-placeholder-vector-illustration-vector-id1223671392?k=20&m=1223671392&s=612x612&w=0&h=lGpj2vWAI3WUT1JeJWm1PRoHT3V15_1pdcTn2szdwQ0=" /></a></div>                
                     {{ request.user|capfirst }}  
                 {% else %}
-                    <div class="profile-image mx-auto"><a href="#" data-bs-toggle="modal" data-bs-target="#imageModal"><img src="{{ MEDIA_URL }}noprofile.png" /></a></div>                
+                    <div class="profile-image mx-auto"><a href="#" data-bs-toggle="modal" data-bs-target="#imageModal"><img src="{{ request.user.profile.profile_pic }}" /></a></div>                
                     {{ request.user|capfirst }}               
                 {% endif %}                                
             </div>
@@ -29,11 +29,11 @@
                     <button type="button" class="btn-close btn-sm" data-bs-dismiss="modal" aria-label="Close"></button>
                     </div>
                     <div class="modal-body">
-                        <form id="uploadImage" action="{% url 'upload-image' %}" method="POST" enctype="multipart/form-data">
+                        <form id="uploadImage" action="{% url 'upload-image' %}" method="POST">
                             {% csrf_token %}
                             <div class="input-group mb-3">
                                 <label class="input-group-text" for="inputGroupFile01">Image</label>
-                                <input type="file" name="profile" class="form-control" id="inputGroupFile01">
+                                <input type="url" name="profile" class="form-control" id="inputGroupFile01">
                             </div>
                             <button type="submit" class="btn btn-dark">Save</button>  
                         </form>
@@ -78,9 +78,9 @@
                     <div class="modal-content chat-content">
                         <div class="modal-header">
                             <h5 class="modal-title" id="exampleModalLabel">{% if user.profile.profile_pic %}
-                                    <div class="profile-image-modal mx-auto"><img src="{{ MEDIA_URL }}{{ user.profile.profile_pic }}" /></div>                
+                                    <div class="profile-image-modal mx-auto"><img src="{{ user.profile.profile_pic }}" /></div>                
                                 {% else %}
-                                    <div class="profile-image-modal mx-auto"><img src="{{ MEDIA_URL }}noprofile.png" /></a></div>                      
+                                    <div class="profile-image-modal mx-auto"><img src="https://media.istockphoto.com/vectors/default-profile-picture-avatar-photo-placeholder-vector-illustration-vector-id1223671392?k=20&m=1223671392&s=612x612&w=0&h=lGpj2vWAI3WUT1JeJWm1PRoHT3V15_1pdcTn2szdwQ0=" /></a></div>                      
                                 {% endif %}  
                             </h5>
                             <div class="h5 my-auto ps-2 mt-2">{{ user|capfirst }}</div>

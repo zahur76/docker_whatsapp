@@ -31,9 +31,9 @@ SECRET_KEY = os.environ.get("SECRET_KEY")
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ["django-whatsapp-zm.herokuapp.com", "localhost", "127.0.0.1"]
+ALLOWED_HOSTS = ["django-docker-whatsapp.herokuapp.com", "localhost", "127.0.0.1"]
 
-CSRF_TRUSTED_ORIGINS = ["https://django-whatsapp-zm.herokuapp.com"]
+CSRF_TRUSTED_ORIGINS = ["https://django-docker-whatsapp.herokuapp.com"]
 
 
 # Application definition
@@ -61,6 +61,7 @@ INSTALLED_APPS = [
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
+    'whitenoise.middleware.WhiteNoiseMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
@@ -106,28 +107,18 @@ TEMPLATES = [
 ASGI_APPLICATION = "django_whatsapp.asgi.application"
 
 # channel settings
-if "DEVELOPMENT" in os.environ:
-    CHANNEL_LAYERS = {
-        'default': {           
-            ## Method 2: Via local Redis
-            'BACKEND': 'channels_redis.core.RedisChannelLayer',
-            'CONFIG': {
-                "hosts": [('127.0.0.1', 6379)],
-            },
+
+CHANNEL_LAYERS = {
+    'default': {
+        # Via redis lab
+        'BACKEND': 'channels_redis.core.RedisChannelLayer',
+        'CONFIG': {
+            "hosts": [
+            os.environ["REDIS_URL"] 
+            ],
         },
-    }
-else:
-    CHANNEL_LAYERS = {
-        'default': {
-            # Via redis lab
-            'BACKEND': 'channels_redis.core.RedisChannelLayer',
-            'CONFIG': {
-                "hosts": [
-                os.environ["REDIS_URL"] 
-                ],
-            },
-        },
-    }
+    },
+}
 
 
 # Database
@@ -195,38 +186,11 @@ STATICFILES_DIRS = (os.path.join(BASE_DIR, "static"),)
 STATIC_ROOT = os.path.join(BASE_DIR, "staticfiles")
 
 # where media files are served https://127.0.0.1/media/{file}
-MEDIA_URL = "/media/"
+# MEDIA_URL = "/media/"
 
 # media save location
-MEDIA_ROOT = os.path.join(BASE_DIR, "media")
+# MEDIA_ROOT = os.path.join(BASE_DIR, "media")
 
-if "USE_AWS" in os.environ:
-    # Cache control
-    AWS_S3_OBJECT_PARAMETERS = {
-        "Expires": "Thu, 31 Dec 2099 20:00:00 GMT",
-        "CacheControl": "max-age=94608000",
-    }
-    # Bucket Config
-    AWS_STORAGE_BUCKET_NAME = "django-whatsapp-zahur"
-    AWS_S3_REGION_NAME = "ap-southeast-1"
-    AWS_ACCESS_KEY_ID = os.environ.get("AWS_ACCESS_KEY_ID")
-    AWS_SECRET_ACCESS_KEY = os.environ.get("AWS_SECRET_ACCESS_KEY")
-    AWS_S3_CUSTOM_DOMAIN = f"{AWS_STORAGE_BUCKET_NAME}.s3.amazonaws.com"
-
-    # Static and media files
-    # To allow django-admin collectstatic to automatically put your static files in your bucket
-    STATICFILES_STORAGE = "custom_storages.StaticStorage"
-    STATICFILES_LOCATION = (
-        "static"  # store files under directory `static/` in bucket `my-app-bucket`
-    )
-    DEFAULT_FILE_STORAGE = "custom_storages.MediaStorage"
-    MEDIAFILES_LOCATION = (
-        "media"  # store files under directory `media/` in bucket `my-app-bucket`
-    )
-
-    # Override static and media URLs in production
-    STATIC_URL = f"https://{AWS_S3_CUSTOM_DOMAIN}/{STATICFILES_LOCATION}/"
-    MEDIA_URL = f"https://{AWS_S3_CUSTOM_DOMAIN}/{MEDIAFILES_LOCATION}/"
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/4.0/ref/settings/#default-auto-field

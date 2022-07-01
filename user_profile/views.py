@@ -8,13 +8,9 @@ def upload_image(request):
 
     if request.method == 'POST':
 
-        image = request.FILES['profile']
-
-        print(image)
-
         try:
             profile = get_object_or_404(UserProfile, user=request.user)
-            profile.profile_pic = image
+            profile.profile_pic = request.POST['profile']
             profile.save()
             messages.success(request, "Profile Image Added!")
             return redirect(reverse("home"))

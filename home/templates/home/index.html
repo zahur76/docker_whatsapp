@@ -43,7 +43,7 @@
             </div>
             <div class="col-12 border-bottom fst-italic h4 text-start">ChatBoxers</div>
             {% else %}
-            <div class="col-12 fst-italic h4 text-center p-3">Please Login</div>
+            <div class="col-12 fst-italic h4 text-center p-3 text-danger">Please Login</div>
             {% endif %}           
             {% if request.user.is_authenticated %}
             {% for user in users %}                

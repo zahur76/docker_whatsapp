@@ -1,58 +1,32 @@
-# Django WhatsApp
+# Django Docker WhatsApp
 
-A Web based App which allows messaging for signed in users. 
+A Web based App with instructions on deploying to Heroku docker. 
 
-Works similar to whatsapp with seen and unseen status with real time message update.
+Also includes deployment using asgi instead og wsgi using daphne
 
-Make use of django channel with websockets for asynchronous message sending to consumers.
+## Steps 
 
-Can also upload and change profile photo by clicking on image.
+1. Create App in Heroku and provision all resources, Postgres and Redis.
+    - URI will be automatically generated and added to Heroku Config Vars
+    - Will need to add secret key and other passwords if any
 
-Live [site](https://django-whatsapp-zm.herokuapp.com/)
+2. Login into heroku
 
-![sign-in](media/video.gif)
+    ``` heroku login -i ```
 
-![sign-in](media/Untitled.png)
+3. Login into heroku container
 
-![sign-in](media/whatsapp2.png)
+    ``` heroku container:login ```
 
-![screen shot](/media/screen.png?)
+    reply: ``` Login Successful ```
 
-## INSTALLATION
+4. Make image and push container to Heroku
 
-* clone repo 
-* run ```pip install -r requirements.txt```
-* run ```python manage.py makemigrate```
-* run ```python manage.py migrate```
-* run ```python manage.py createsuperuser```
-* run ```python manage.py runserver```
+    ``` heroku container:push web --app django-docker-whatsapp ```
 
-## COLLECTSTATIC
+    This will run the Dockerfile with all commands
 
-```python manage.py collectstatic --noinput -i fontawesomefree```
+5. Release Container 
 
-## TECHNOLOGIES USED
-
-* HTML5
-* css 
-* javacript (ES6)
-* python (v3.9)
-* Django
-* Channels for async message system
-* Redis for aysnc message system
-* Django restframework to send messages to frontend via fetch request with needing to reload page
-* SQL database
-* Jquery mainly for fetch requests
-* Chrome developers tools for analysing scripts and debugging
-* Boostrap 5 for :
-    1. page layout purposes and responsive design aspects
-    2. Forms 
-    3. Modals 
-
-
-## Messages Deletion
-
-Clear will erase message from logged-in user side only.
-
-Delete will modify message to "Message Deleted" for both sender and receiver. This can only be done by the message creator
+    ``` heroku container:release web --app django-docker-whatsapp ```
 
